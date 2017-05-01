@@ -95,7 +95,6 @@ pd <- data.frame("subgroups" = c(1,2,4,6,7),
 
 View(pd)
 
-
 # add a barplot for each normalized personality disorder.
 barplot(pd$narcTraits, main="narcissistic traits",
         xlab="subgroups 1,2,4,6,7", beside=TRUE)
@@ -117,6 +116,28 @@ barplot(pd$avoidTraits, pd$subgroups, main="avoidant traits",
 
 barplot(pd$allpdTraits, pd$subgroups, main="all pd traits",
         xlab="subgroups 1,2,4,6,7", beside=TRUE)
+
+#make a historgram about the distribution of scores for narcissism for each subgroup
+hist(ssidp$narc[ssidp$subgroup==1], plot=TRUE, xlab="max scores/subjects")
+hist(ssidp$narc[ssidp$subgroup==2], plot=TRUE, xlab="max scores/subjects")
+hist(ssidp$narc[ssidp$subgroup==4], plot=TRUE, xlab="max scores/subjects")
+hist(ssidp$narc[ssidp$subgroup==6], plot=TRUE, xlab="max scores/subjects")
+hist(ssidp$narc[ssidp$subgroup==7], plot=TRUE, xlab="max scores/subjects")
+hist(ssidp$narc, plot=TRUE, xlab="max scores/subjects")
+
+
+par(mfrow=c(1,1))
+par(mfrow=c(3,4))
+
+#add a boxplot
+boxplot(ssidp$narc~ssidp$subgroup, data=ssidp, varwidth=TRUE, notch=TRUE, main="narcissistic traits", xlab="subgroups 1,2,4,6,7")
+boxplot(ssidp$bpd~ssidp$subgroup, data=ssidp, varwidth=TRUE)
+boxplot(ssidp$antisoc~ssidp$subgroup, data=ssidp, varwidth=TRUE)
+boxplot(ssidp$ocpd~ssidp$subgroup, data=ssidp, varwidth=TRUE)
+boxplot(ssidp$avoid~ssidp$subgroup, data=ssidp, varwidth=TRUE)
+boxplot(ssidp$schtyp~ssidp$subgroup, data=ssidp, varwidth=TRUE)
+boxplot(ssidp$allpd~ssidp$subgroup, data=ssidp, varwidth=TRUE)
+
 
 
 #linear model for each personality disorder, including subgroup, age and gender
@@ -141,6 +162,29 @@ summary(f.avoid)
 f.allpd = lm(ssidp$allpd ~ ssidp$subgroup + ssidp$age.baseline + ssidp$gender)
 summary(f.allpd)
 
+#linear model for each personality disorder
+f0.narc = lm(ssidp$narc ~ ssidp$subgroup)
+summary(f0.narc)
+
+f0.bpd = lm(ssidp$bpd ~ ssidp$subgroup)
+summary(f0.bpd)
+
+f0.ocpd = lm(ssidp$ocpd ~ ssidp$subgroup)
+summary(f0.ocpd)
+
+f0.antisoc = lm(ssidp$antisoc ~ ssidp$subgroup)
+summary(f0.antisoc)
+
+f0.schtyp = lm(ssidp$schtyp ~ ssidp$subgroup)
+summary(f0.schtyp)
+
+f0.avoid = lm(ssidp$avoid ~ ssidp$subgroup)
+summary(f0.avoid)
+
+f0.allpd = lm(ssidp$allpd ~ ssidp$subgroup)
+summary(f0.allpd)
+
+
 
 #linear model for each personality disorder, including age, gender and level of education
 d.narc = lm(ssidp$narc ~ ssidp$education + ssidp$age.baseline + ssidp$gender)
@@ -163,6 +207,46 @@ summary(d.avoid)
 
 d.allpd = lm(ssidp$allpd ~ ssidp$education + ssidp$age.baseline + ssidp$gender)
 summary(d.allpd)
+
+#linear model for each subgroup, including each set of traits, without covarying for age and gender
+ssidp$subgroup.num <- as.numeric(ssidp$subgroup)
+
+sg.narc = lm(ssidp$subgroup.num ~ ssidp$narc)
+summary(sg.narc)
+sg2.narc = lm(ssidp$subgroup.num ~ ssidp$narc + ssidp$gender + ssidp$age.baseline)
+summary(sg2.narc)
+
+
+sg.bpd = lm(ssidp$subgroup.num ~ + ssidp$bpd)
+summary(sg.bpd)
+sg2.bpd = lm(ssidp$subgroup.num ~ + ssidp$bpd + ssidp$gender + ssidp$age.baseline)
+summary(sg2.bpd)
+
+sg.antisoc = lm(ssidp$subgroup.num ~ + ssidp$antisoc)
+summary(sg.antisoc)
+sg2.antisoc = lm(ssidp$subgroup.num ~ + ssidp$antisoc + ssidp$gender + ssidp$age.baseline)
+summary(sg2.antisoc)
+
+sg.ocpd = lm(ssidp$subgroup.num ~ + ssidp$ocpd)
+summary(sg.ocpd)
+sg2.ocpd = lm(ssidp$subgroup.num ~ + ssidp$ocpd + ssidp$gender + ssidp$age.baseline)
+summary(sg2.ocpd)
+
+sg.avoid = lm(ssidp$subgroup.num ~ + ssidp$avoid)
+summary(sg.avoid)
+sg2.avoid = lm(ssidp$subgroup.num ~ + ssidp$avoid + ssidp$gender + ssidp$age.baseline)
+summary(sg2.avoid)
+
+sg.schtyp = lm(ssidp$subgroup.num ~ + ssidp$schtyp)
+summary(sg.schtyp)
+sg2.schtyp = lm(ssidp$subgroup.num ~ + ssidp$schtyp + ssidp$gender + ssidp$age.baseline)
+summary(sg2.schtyp)
+
+sg.allpd = lm(ssidp$subgroup.num ~ + ssidp$allpd)
+summary(sg.allpd)
+sg2.allpd = lm(ssidp$subgroup.num ~ + ssidp$allpd + ssidp$gender + ssidp$age.baseline)
+summary(sg2.allpd)
+
 
 
 #linear model for each personality disorder, including delay discounting, age and gender
@@ -208,3 +292,66 @@ summary(g2.avoid)
 
 g2.allpd = lm(ssidp$allpd ~ ssidp$admc.sc + ssidp$age.baseline + ssidp$gender)
 summary(g2.allpd)
+
+
+#linear model of attempters only
+f2.narc = lm(ssidp$narc[ssidp$subgroup %in% 6:7] ~ ssidp$subgroup[ssidp$subgroup %in% 6:7] + ssidp$gender[ssidp$subgroup %in% 6:7])
+summary(f2.narc)
+
+f2.ocpd = lm(ssidp$ocpd[ssidp$subgroup %in% 6:7] ~ ssidp$subgroup[ssidp$subgroup %in% 6:7] + ssidp$gender[ssidp$subgroup %in% 6:7])
+summary(f2.ocpd)
+
+f2.antisoc = lm(ssidp$antisoc[ssidp$subgroup %in% 6:7] ~ ssidp$subgroup[ssidp$subgroup %in% 6:7] + ssidp$gender[ssidp$subgroup %in% 6:7])
+summary(f2.antisoc)
+
+f2.bpd = lm(ssidp$bpd[ssidp$subgroup %in% 6:7] ~ ssidp$subgroup[ssidp$subgroup %in% 6:7] + ssidp$gender[ssidp$subgroup %in% 6:7])
+summary(f2.bpd)
+
+f2.avoid = lm(ssidp$avoid[ssidp$subgroup %in% 6:7] ~ ssidp$subgroup[ssidp$subgroup %in% 6:7] + ssidp$gender[ssidp$subgroup %in% 6:7])
+summary(f2.avoid)
+
+f2.schtyp = lm(ssidp$schtyp[ssidp$subgroup %in% 6:7] ~ ssidp$subgroup[ssidp$subgroup %in% 6:7] + ssidp$gender[ssidp$subgroup %in% 6:7])
+summary(f2.schtyp)
+
+f2.allpd = lm(ssidp$allpd[ssidp$subgroup %in% 6:7] ~ ssidp$subgroup[ssidp$subgroup %in% 6:7] + ssidp$gender[ssidp$subgroup %in% 6:7])
+summary(f2.allpd)
+
+
+
+#linear model for each subgroup, including each set of traits, without covarying for age and gender
+ssidp$subgroup.num <- as.numeric(ssidp$subgroup)
+
+sg.narc = lm(ssidp$subgroup.num ~ ssidp$narc)
+summary(sg.narc)
+sg2.narc = lm(ssidp$subgroup.num ~ ssidp$narc + ssidp$gender + ssidp$age.baseline)
+summary(sg2.narc)
+
+sg.bpd = lm(ssidp$subgroup.num ~ + ssidp$bpd)
+summary(sg.bpd)
+sg2.bpd = lm(ssidp$subgroup.num ~ + ssidp$bpd + ssidp$gender + ssidp$age.baseline)
+summary(sg2.bpd)
+
+sg.antisoc = lm(ssidp$subgroup.num ~ + ssidp$antisoc)
+summary(sg.antisoc)
+sg2.antisoc = lm(ssidp$subgroup.num ~ + ssidp$antisoc + ssidp$gender + ssidp$age.baseline)
+summary(sg2.antisoc)
+
+sg.ocpd = lm(ssidp$subgroup.num ~ + ssidp$ocpd)
+summary(sg.ocpd)
+sg2.ocpd = lm(ssidp$subgroup.num ~ + ssidp$ocpd + ssidp$gender + ssidp$age.baseline)
+summary(sg2.ocpd)
+
+sg.avoid = lm(ssidp$subgroup.num ~ + ssidp$avoid)
+summary(sg.avoid)
+sg2.avoid = lm(ssidp$subgroup.num ~ + ssidp$avoid + ssidp$gender + ssidp$age.baseline)
+summary(sg2.avoid)
+
+sg.schtyp = lm(ssidp$subgroup.num ~ + ssidp$schtyp)
+summary(sg.schtyp)
+sg2.schtyp = lm(ssidp$subgroup.num ~ + ssidp$schtyp + ssidp$gender + ssidp$age.baseline)
+summary(sg2.schtyp)
+
+sg.allpd = lm(ssidp$subgroup.num ~ + ssidp$allpd)
+summary(sg.allpd)
+sg2.allpd = lm(ssidp$subgroup.num ~ + ssidp$allpd + ssidp$gender + ssidp$age.baseline)
+summary(sg2.allpd)
