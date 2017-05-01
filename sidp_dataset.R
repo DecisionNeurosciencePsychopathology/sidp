@@ -13,10 +13,10 @@ library(R.matlab)
 library(xtable)
 library(Hmisc)
 
-setwd('C:\Users\a\Documents\GitHub\sidp')
+setwd("C:/Users/a/Documents/GitHub/sidp")
 
-sidp <- read_excel("sidp.xlsx")
-View(sidp)
+ssidp <- read_excel("sidp.xlsx")
+View(ssidp)
 
 ##abreviations used:
 ## dob = date of birth
@@ -32,7 +32,7 @@ View(sidp)
 ## subst = substance: lifetime, current
 
 #creating a smaller dataset without the suspicious participant coded "5" for subgroup.
-ssidp <- sidp[(sidp$subgroup !=5),]
+#ssidp <- sidp[(sidp$subgroup !=5),]
 
 #transforming columns to the correct types
 ssidp <- transform(ssidp, lethality = as.numeric(lethality), antisoc.ref = as.numeric(antisoc.ref), bpd.ref = as.numeric(bpd.ref), narc.ref = as.numeric(narc.ref), ocpd.ref = as.numeric(ocpd.ref))
@@ -140,50 +140,41 @@ boxplot(ssidp$allpd~ssidp$subgroup, data=ssidp, varwidth=TRUE)
 
 
 
-#linear model for each personality disorder, including subgroup, age and gender
+#linear model for each personality disorder, with and qithout age and gender
+f0.narc = lm(ssidp$narc ~ ssidp$subgroup)
+summary(f0.narc)
 f.narc = lm(ssidp$narc ~ ssidp$subgroup + ssidp$age.baseline + ssidp$gender)
 summary(f.narc)
 
+f0.bpd = lm(ssidp$bpd ~ ssidp$subgroup)
+summary(f0.bpd)
 f.bpd = lm(ssidp$bpd ~ ssidp$subgroup + ssidp$age.baseline + ssidp$gender)
 summary(f.bpd)
 
+f0.ocpd = lm(ssidp$ocpd ~ ssidp$subgroup)
+summary(f0.ocpd)
 f.ocpd = lm(ssidp$ocpd ~ ssidp$subgroup + ssidp$age.baseline + ssidp$gender)
 summary(f.ocpd)
 
+f0.antisoc = lm(ssidp$antisoc ~ ssidp$subgroup)
+summary(f0.antisoc)
 f.antisoc = lm(ssidp$antisoc ~ ssidp$subgroup + ssidp$age.baseline + ssidp$gender)
 summary(f.antisoc)
 
+f0.schtyp = lm(ssidp$schtyp ~ ssidp$subgroup)
+summary(f0.schtyp)
 f.schtyp = lm(ssidp$schtyp ~ ssidp$subgroup + ssidp$age.baseline + ssidp$gender)
 summary(f.schtyp)
 
+f0.avoid = lm(ssidp$avoid ~ ssidp$subgroup)
+summary(f0.avoid)
 f.avoid = lm(ssidp$avoid ~ ssidp$subgroup + ssidp$age.baseline + ssidp$gender)
 summary(f.avoid)
 
-f.allpd = lm(ssidp$allpd ~ ssidp$subgroup + ssidp$age.baseline + ssidp$gender)
-summary(f.allpd)
-
-#linear model for each personality disorder
-f0.narc = lm(ssidp$narc ~ ssidp$subgroup)
-summary(f0.narc)
-
-f0.bpd = lm(ssidp$bpd ~ ssidp$subgroup)
-summary(f0.bpd)
-
-f0.ocpd = lm(ssidp$ocpd ~ ssidp$subgroup)
-summary(f0.ocpd)
-
-f0.antisoc = lm(ssidp$antisoc ~ ssidp$subgroup)
-summary(f0.antisoc)
-
-f0.schtyp = lm(ssidp$schtyp ~ ssidp$subgroup)
-summary(f0.schtyp)
-
-f0.avoid = lm(ssidp$avoid ~ ssidp$subgroup)
-summary(f0.avoid)
-
 f0.allpd = lm(ssidp$allpd ~ ssidp$subgroup)
 summary(f0.allpd)
-
+f.allpd = lm(ssidp$allpd ~ ssidp$subgroup + ssidp$age.baseline + ssidp$gender)
+summary(f.allpd)
 
 
 #linear model for each personality disorder, including age, gender and level of education
