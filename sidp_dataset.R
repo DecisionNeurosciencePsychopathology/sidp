@@ -151,8 +151,8 @@ summary(nb_narc)
 
 
 
-# p_bpd <- glm(bpd ~ subgroup + gender + age.baseline, family = "poisson", data = ssidp)
-# summary(p_bpd)
+p_bpd <- glm(bpd ~ subgroup + gender + age.baseline, family = "poisson", data = ssidp)
+summary(p_bpd)
 
 nb_bpd <- glm.nb(bpd ~ subgroup + gender + age.baseline, data = ssidp, link = log)
 summary(nb_bpd)
