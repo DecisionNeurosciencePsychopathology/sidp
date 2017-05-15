@@ -95,6 +95,8 @@ pd <- data.frame("subgroups" = c(1,2,4,6,7),
 
 View(pd)
 
+summary()
+
 # add a barplot for each normalized personality disorder.
 barplot(pd$narcTraits, main="narcissistic traits",
         xlab="subgroups 1,2,4,6,7", beside=TRUE)
