@@ -12,8 +12,11 @@ source(file.path(getMainDir(), "Miscellaneous", "Global_Functions.R"))
 library(R.matlab)
 library(xtable)
 library(Hmisc)
+library(MASS)
+library(multcomp)
+# setwd("C:/Users/a/Documents/GitHub/sidp")
+setwd("~/code/sidp")
 
-setwd("C:/Users/a/Documents/GitHub/sidp")
 
 ssidp <- read_excel("sidp.xlsx")
 View(ssidp)
@@ -49,13 +52,13 @@ View(nb.subgroup)
 ssidp$allpd <- ssidp$narc + ssidp$bpd + ssidp$ocpd + ssidp$antisoc + ssidp$schtyp + ssidp$avoid
 
 #creating normalized values for PD traits according to maximum scores for each PD.
-ssidp$narc.norm <- ssidp$narc/ssidp$narc.ref
-ssidp$antisoc.norm <- ssidp$antisoc/ssidp$antisoc.ref
-ssidp$bpd.norm <- ssidp$bpd/ssidp$bpd.ref
-ssidp$ocpd.norm <- ssidp$ocpd/ssidp$ocpd.ref
-ssidp$avoid.norm <- ssidp$avoid/ssidp$avoid.ref
-ssidp$schtyp.norm <- ssidp$schtyp/ssidp$schtyp.ref
-ssidp$allpd.norm <- ssidp$allpd/(ssidp$narc.ref + ssidp$antisoc.ref + ssidp$bpd.ref + ssidp$ocpd.ref + ssidp$avoid.ref + ssidp$schtyp.ref)
+# ssidp$narc.norm <- ssidp$narc/ssidp$narc.ref
+# ssidp$antisoc.norm <- ssidp$antisoc/ssidp$antisoc.ref
+# ssidp$bpd.norm <- ssidp$bpd/ssidp$bpd.ref
+# ssidp$ocpd.norm <- ssidp$ocpd/ssidp$ocpd.ref
+# ssidp$avoid.norm <- ssidp$avoid/ssidp$avoid.ref
+# ssidp$schtyp.norm <- ssidp$schtyp/ssidp$schtyp.ref
+# ssidp$allpd.norm <- ssidp$allpd/(ssidp$narc.ref + ssidp$antisoc.ref + ssidp$bpd.ref + ssidp$ocpd.ref + ssidp$avoid.ref + ssidp$schtyp.ref)
 
 
 #sidp$clusterA <- sidp$schtyp
@@ -140,6 +143,23 @@ boxplot(ssidp$avoid~ssidp$subgroup, data=ssidp, varwidth=TRUE)
 boxplot(ssidp$schtyp~ssidp$subgroup, data=ssidp, varwidth=TRUE)
 boxplot(ssidp$allpd~ssidp$subgroup, data=ssidp, varwidth=TRUE)
 
+
+
+# try the negative binomial with log link
+nb_narc <- glm.nb(narc ~ subgroup + gender + age.baseline, data = ssidp, link = log)
+summary(nb_narc)
+# p_narc <- glm(narc ~ subgroup + gender + age.baseline, family = "poisson", data = ssidp)
+# summary(p_narc)
+
+
+
+p_bpd <- glm(bpd ~ subgroup + gender + age.baseline, family = "poisson", data = ssidp)
+summary(p_bpd)
+
+nb_bpd <- glm.nb(bpd ~ subgroup + gender + age.baseline, data = ssidp, link = log)
+summary(nb_bpd)
+# pchisq(2 * (logLik(nb_bpd) - logLik(p_bpd)), df = 1, lower.tail = FALSE)
+summary(glht(p_bpd, mcp(rank = "Tukey")))
 
 
 #linear model for each personality disorder, with and qithout age and gender
